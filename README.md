@@ -6,7 +6,7 @@ This is latest PHP 7 images, with pre-installed extensions:
 - intl
 - mbstring
 - mcrypt
-- memcache
+- memcached
 - opcache
 - pdo_mysql
 - xml
