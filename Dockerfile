@@ -3,8 +3,9 @@ MAINTAINER sang@go1.com.au
 
 # Install modules
 RUN apt-get update \
-    && apt-get install -y libmcrypt-dev libicu-dev libmemcached-dev libz-dev libxml2-dev libssl-dev libcurl4-openssl-dev zlib1g-dev \
-    && docker-php-ext-install -j$(nproc) gettext intl mbstring mcrypt opcache pdo_mysql xml \
+    && apt-get install -y libpng12-dev libjpeg-dev libpq-dev git libmcrypt-dev libicu-dev libmemcached-dev libz-dev libxml2-dev libssl-dev libcurl4-openssl-dev zlib1g-dev \
+    && docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr \
+    && docker-php-ext-install -j$(nproc) bcmath gd gettext intl mbstring mcrypt opcache pdo pdo_mysql xml zip \
     && git clone https://github.com/php-memcached-dev/php-memcached /usr/src/php/ext/memcached \
     && cd /usr/src/php/ext/memcached && git checkout -b php7 origin/php7 \
     && docker-php-ext-configure memcached && docker-php-ext-install memcached && docker-php-ext-enable memcached \
