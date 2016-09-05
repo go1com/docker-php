@@ -9,6 +9,6 @@ RUN apt-get update \
     && pecl install memcache && docker-php-ext-enable memcache \
     && pecl install memcached && docker-php-ext-enable memcached \
     && echo "upload_max_filesize = 200M\npost_max_size = 200M" > /usr/local/etc/php/conf.d/uploads.ini \
-    && echo "log_errors=On\nerror_reporting=E_ERROR | E_WARNING | E_PARSE | E_NOTICE" > /usr/local/etc/php/conf.d/errors.ini \
+    && echo "log_errors=On\nerror_reporting=E_ERROR | E_PARSE" > /usr/local/etc/php/conf.d/errors.ini \
     && echo 'date.timezone = UTC' >> /usr/local/etc/php/php.ini \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
