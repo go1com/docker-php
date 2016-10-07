@@ -1,25 +1,29 @@
-FROM php:7-apache
+FROM php:7-fpm-alpine
 MAINTAINER sang@go1.com.au
 
 # Install modules
-RUN apt-get update \
-    && apt-get install -y -qq libpng12-dev libjpeg-dev libpq-dev git libmcrypt-dev libicu-dev libmemcached-dev libz-dev libxml2-dev libssl-dev libcurl4-openssl-dev zlib1g-dev \
-    && docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr \
-    && docker-php-ext-install -j$(nproc) bcmath gd gettext intl mbstring mcrypt opcache pdo pdo_mysql xml zip \
-    && git clone https://github.com/php-memcached-dev/php-memcached /usr/src/php/ext/memcached \
-    && cd /usr/src/php/ext/memcached && git checkout -b php7 origin/php7 \
-    && phpize && ./configure && make && make install && docker-php-ext-enable memcached \
-    && echo "upload_max_filesize = 200M\npost_max_size = 200M" > /usr/local/etc/php/conf.d/uploads.ini \
-    && echo "log_errors=On\ndisplay_errors=Off\nerror_reporting=E_ERROR | E_PARSE" > /usr/local/etc/php/conf.d/errors.ini \
-    && echo 'date.timezone = UTC' >> /usr/local/etc/php/php.ini \
-    && apt-get clean \
-    && a2enmod rewrite \
-    && a2dissite 000-default \
-    && rm -rf /var/lib/apt/lists/*
+RUN apk add --no-cache --virtual .persistent-deps \
+  libintl \
+  libmcrypt \
+  icu-libs \
+  freetype \
+  libpng \
+  libjpeg-turbo \
+  && rm -rf /var/cache/apk/*
 
-COPY app.conf /etc/apache2/sites-available
-COPY entrypoint.sh /
-
-RUN chmod a+x /entrypoint.sh && a2ensite app
-
-CMD ["/entrypoint.sh"]
+RUN apk add --no-cache --virtual .build-deps \
+    freetype-dev \
+    libpng-dev \
+    libjpeg-turbo-dev \
+    libmcrypt-dev \
+    libxml2-dev \
+    gettext-dev \
+    icu-dev \
+  && docker-php-ext-configure gd \
+    --with-gd \
+    --with-freetype-dir=/usr/include/ \
+    --with-png-dir=/usr/include/ \
+    --with-jpeg-dir=/usr/include/ \
+  && NPROC=$(grep -c ^processor /proc/cpuinfo 2>/dev/null || 1) \
+  && docker-php-ext-install -j${NPROC} bcmath gd gettext intl mcrypt opcache pdo pdo_mysql xml zip \
+  && apk del .build-deps
