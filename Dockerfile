@@ -8,6 +8,7 @@ RUN apk add --no-cache --virtual .persistent-deps \
   icu-libs \
   freetype \
   libpng \
+  nginx \
   libjpeg-turbo \
   && rm -rf /var/cache/apk/*
 
