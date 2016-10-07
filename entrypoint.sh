@@ -8,7 +8,7 @@ do
     key=$(echo "$var" | sed -E 's/_DOCKER_([^=]+).+/\1/g')
     var=$(echo "$var" | sed -E 's/_DOCKER_([^=]+).+/_DOCKER_\1/g')
     eval val=\$$var
-    sed -i "2s/^/SetEnv $key $val\n/" app.conf
+    sed -i "2s/^/SetEnv $key $val\n/" /etc/apache2/sites-available/app.conf
 done
 
 apache2-foreground
