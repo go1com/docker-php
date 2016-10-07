@@ -1,4 +1,4 @@
-FROM php:7-fpm
+FROM php:7-apache
 MAINTAINER sang@go1.com.au
 
 # Install modules
@@ -12,4 +12,14 @@ RUN apt-get update \
     && echo "upload_max_filesize = 200M\npost_max_size = 200M" > /usr/local/etc/php/conf.d/uploads.ini \
     && echo "log_errors=On\ndisplay_errors=Off\nerror_reporting=E_ERROR | E_PARSE" > /usr/local/etc/php/conf.d/errors.ini \
     && echo 'date.timezone = UTC' >> /usr/local/etc/php/php.ini \
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
+    && apt-get clean \
+    && a2enmod rewrite \
+    && a2dissite 000-default \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY app.conf /etc/apache2/sites-available
+COPY entrypoint.sh /
+
+RUN chmod a+x /entrypoint.sh && a2ensite app
+
+CMD ["/entrypoint.sh"]
