@@ -67,6 +67,8 @@ RUN sed -i \
         -e "s/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/g" \
         -e "s/upload_max_filesize\s*=\s*2M/upload_max_filesize = 100M/g" \
         -e "s/post_max_size\s*=\s*8M/post_max_size = 100M/g" \
+        -e "s/memory_limit\s*=\s*128M/memory_limit = 32M/g" \
+        -e "s/;opcache.memory_consumption=64/opcache.memory_consumption=16/g" \
         -e "s/variables_order = \"GPCS\"/variables_order = \"EGPCS\"/g" \
         ${php_conf} && \
     sed -i \
@@ -84,6 +86,7 @@ RUN sed -i \
         -e "s/;listen.group = nobody/listen.group = nginx/g" \
         -e "s/listen = 127.0.0.1:9000/listen = \/var\/run\/php-fpm.sock/g" \
         -e "s/^;clear_env = no$/clear_env = no/" \
+        -e "s/^;listen.allowed_clients = 127.0.0.1$/listen.allowed_clients = 127.0.0.1/" \
         ${fpm_conf} && \
     find /etc/php7/conf.d/ -name "*.ini" -exec sed -i -re 's/^(\s*)#(.*)/\1;\2/g' {} \;
 
