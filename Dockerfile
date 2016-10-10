@@ -91,7 +91,5 @@ RUN sed -i \
 ADD scripts/start.sh /start.sh
 RUN chmod a+x /start.sh
 
-VOLUME /app/public
-
 EXPOSE 80
 CMD ["/start.sh"]
