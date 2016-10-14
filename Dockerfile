@@ -58,10 +58,10 @@ RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositori
     mkdir -p /app/public/ && \
     ln -s /etc/nginx/sites-available/default.conf /etc/nginx/sites-enabled/default.conf
 
-ADD conf/supervisord.conf /etc/supervisord.conf
+COPY conf/supervisord.conf /etc/supervisord.conf
 # Copy our nginx config
-ADD conf/nginx.conf /etc/nginx/nginx.conf
-ADD conf/app-site.conf /etc/nginx/sites-available/default.conf
+COPY conf/nginx.conf /etc/nginx/nginx.conf
+COPY conf/app-site.conf /etc/nginx/sites-available/default.conf
 
 # tweak php-fpm config
 RUN sed -i \
@@ -93,7 +93,7 @@ RUN sed -i \
     find /etc/php7/conf.d/ -name "*.ini" -exec sed -i -re 's/^(\s*)#(.*)/\1;\2/g' {} \;
 
 # Add Scripts
-ADD scripts/start.sh /start.sh
+COPY scripts/start.sh /start.sh
 RUN chmod a+x /start.sh
 
 EXPOSE 80
