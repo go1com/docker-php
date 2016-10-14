@@ -8,6 +8,13 @@ else
   webroot=/app/public
 fi
 
+# Set custom location root
+if [ ! -z "$LOCATIONROOT" ]; then
+  location=$LOCATIONROOT
+  sed -i "s#location / {#location ${location} {#g" /etc/nginx/sites-available/default.conf
+  sed -i "s#/index.php#${location}/index.php#g" /etc/nginx/sites-available/default.conf
+fi
+
 # Convert env
 vars=`set | grep _DOCKER_`
 vars=$(echo $vars | tr "\n")
