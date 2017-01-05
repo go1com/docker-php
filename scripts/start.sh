@@ -36,5 +36,9 @@ if [ ! -z "$SCRIPT" ] && [ -f "$SCRIPT" ]; then
   . $SCRIPT
 fi
 
+if [ -f /app/resources/docker/hook-start ]; then
+    source /app/resources/docker/hook-start
+fi
+
 # Start supervisord and services
 /usr/bin/supervisord -n -c /etc/supervisord.conf
