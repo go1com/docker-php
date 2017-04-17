@@ -15,20 +15,8 @@ if [ ! -z "$LOCATIONROOT" ]; then
   sed -i "s#/index.php#${location}/index.php#g" /etc/nginx/sites-available/default.conf
 fi
 
-# Convert env
-vars=`set | grep _DOCKER_`
-vars=$(echo $vars | tr "\n")
-
-for var in $vars
-do
-    key=$(echo "$var" | sed -E 's/_DOCKER_([^=]+).+/\1/g')
-    var=$(echo "$var" | sed -E 's/_DOCKER_([^=]+).+/_DOCKER_\1/g')
-    eval val=\$$var
-    export ${key}=${val}
-done
-
 # Always chown webroot for better mounting
-chown -Rf nginx.nginx $webroot
+chown -Rf nginx.www-data $webroot
 
 # Allow run custom script
 if [ ! -z "$SCRIPT" ] && [ -f "$SCRIPT" ]; then
@@ -40,5 +28,8 @@ if [ -f /app/resources/docker/hook-start ]; then
     source /app/resources/docker/hook-start
 fi
 
-# Start supervisord and services
-/usr/bin/supervisord -n -c /etc/supervisord.conf
+php-fpm7
+
+mkdir -p /tmp/nginx
+chown nginx /tmp/nginx
+nginx
