@@ -1,60 +1,64 @@
-FROM alpine:edge
-# Add edge cdn
-RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories && \
-    echo "http://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories && \
-    echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories && \
-    apk -U upgrade && \
+FROM alpine
+RUN apk -U upgrade && \
     apk add --no-cache bash \
-        nginx \
+        apache2 \
         curl \
-        php7 \
-        php7-fpm \
-        php7-bcmath \
-        php7-bz2 \
-        php7-calendar \
-        php7-ctype \
-        php7-curl \
-        php7-dom \
-        php7-exif \
-        php7-ftp \
-        php7-gettext \
-        php7-gd \
-        php7-iconv \
-        php7-intl \
-        php7-imap \
-        php7-json \
-        php7-mysqlnd \
-        php7-mysqli \
-        php7-mcrypt \
-        php7-memcached \
-        php7-mbstring \
-        php7-openssl \
-        php7-pdo \
-        php7-pdo_mysql \
-        php7-pdo_pgsql \
-        php7-pdo_sqlite \
-        php7-phar \
-        php7-posix \
-        php7-pgsql \
-        php7-session \
-        php7-soap \
-        php7-sockets \
-        php7-sqlite3 \
-        php7-wddx \
-        php7-xml \
-        php7-xmlreader \
-        php7-xsl \
-        php7-zip \
-        php7-zlib \
+        php5 \
+        php5-apache2 \
+        php5-bcmath \
+        php5-bz2 \
+        php5-calendar \
+        php5-common \
+        php5-ctype \
+        php5-curl \
+        php5-dom \
+        php5-exif \
+        php5-ftp \
+        php5-gettext \
+        php5-gd \
+        php5-iconv \
+        php5-intl \
+        php5-imap \
+        php5-json \
+        php5-mailparse \
+        php5-mysql \
+        php5-mysqli \
+        php5-mcrypt \
+        php5-memcache \
+        php5-opcache \
+        php5-openssl \
+        php5-pcntl \
+        php5-pdo \
+        php5-pdo_mysql \
+        php5-pdo_pgsql \
+        php5-pdo_sqlite \
+        php5-phar \
+        php5-posix \
+        php5-pgsql \
+        php5-shmop \
+        php5-soap \
+        php5-sockets \
+        php5-sqlite3 \
+        php5-sysvmsg \
+        php5-sysvsem \
+        php5-sysvshm \
+        php5-wddx \
+        php5-xml \
+        php5-xmlreader \
+        php5-xsl \
+        php5-zip \
+        php5-zlib \
         ca-certificates && \
+    echo "http://dl-2.alpinelinux.org/alpine/edge/community/" >> /etc/apk/repositories && \
+    apk add --no-cache shadow && \
     rm -rf /var/cache/apk/* && \
-    mkdir -p /etc/nginx && \
-    mkdir -p /run/nginx && \
-    rm -Rf /etc/nginx/nginx.conf && \
-    mkdir -p /etc/nginx/sites-available/ && \
-    mkdir -p /etc/nginx/sites-enabled/ && \
-    mkdir -p /app/public/ && \
-    ln -s /etc/nginx/sites-available/default.conf /etc/nginx/sites-enabled/default.conf
+    mkdir /run/apache2 && \
+    sed -i 's/#LoadModule\ rewrite_module/LoadModule\ rewrite_module/' /etc/apache2/httpd.conf && \
+    groupmod -g 32 xfs && groupmod -g 33 www-data && usermod -u 106 -g www-data -G apache apache && \
+    sed -ri \
+		-e 's!^(\s*CustomLog)\s+\S+!\1 /proc/self/fd/1!g' \
+		-e 's!^(\s*ErrorLog)\s+\S+!\1 /proc/self/fd/2!g' \
+		"/etc/apache2/httpd.conf"
 
 COPY rootfs /
 EXPOSE 80
