@@ -58,12 +58,7 @@ RUN apk -U upgrade && \
         -e 's/#LoadModule\ rewrite_module/LoadModule\ rewrite_module/' \
         -e 's/#LoadModule\ remoteip_module/LoadModule\ remoteip_module/' \
         -e 's/#LoadModule\ expires_module/LoadModule\ expires_module/' \
-        -e 's/#ServerName\ www.example.com/ServerName\ docker/' \
-        -e 's/Group\ apache/Group\ www-data/' \
-		-e 's!^(\s*CustomLog)\s+\S+!\1 /proc/self/fd/1!g' \
-		-e 's!^(\s*ErrorLog)\s+\S+!\1 /proc/self/fd/2!g' \
-		"/etc/apache2/httpd.conf" && \
-    printf "RemoteIPHeader X-Forwarded-For\nRemoteIPInternalProxy 172.31.0.0/16" > /etc/apache2/conf.d/remoteip.conf
+		"/etc/apache2/httpd.conf"
 
 COPY rootfs /
 EXPOSE 80
