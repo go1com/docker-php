@@ -58,6 +58,7 @@ RUN apk -U upgrade && \
         -e 's/#LoadModule\ rewrite_module/LoadModule\ rewrite_module/' \
         -e 's/#LoadModule\ remoteip_module/LoadModule\ remoteip_module/' \
         -e 's/#LoadModule\ expires_module/LoadModule\ expires_module/' \
+        -e 's/#LoadModule\ logio_module/LoadModule\ logio_module/' \
 		"/etc/apache2/httpd.conf"
 
 COPY rootfs /
