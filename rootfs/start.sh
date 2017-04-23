@@ -44,4 +44,5 @@ php-fpm7
 
 mkdir -p /tmp/nginx
 chown nginx /tmp/nginx
+
 nginx
