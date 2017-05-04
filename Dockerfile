@@ -40,6 +40,7 @@ RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositori
         php7-soap \
         php7-sockets \
         php7-sqlite3 \
+        php7-tokenizer \
         php7-wddx \
         php7-xml \
         php7-xmlreader \
