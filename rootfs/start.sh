@@ -12,8 +12,7 @@ printf "\n<Directory \"/$webroot\">\n\tAllowOverride All\n</Directory>\n" >> /et
 
 # Allow run custom script
 if [ ! -z "$SCRIPT" ] && [ -f "$SCRIPT" ]; then
-  chmod a+x $SCRIPT
-  . $SCRIPT
+  source $SCRIPT
 fi
 
 if [ -f /app/resources/docker/hook-start ]; then
