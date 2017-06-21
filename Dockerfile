@@ -48,6 +48,7 @@ RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositori
         php7-zip \
         php7-zlib \
         php7-fileinfo \
+        php7-simplexml \
         ca-certificates && \
     rm -rf /var/cache/apk/* && \
     mkdir -p /etc/nginx && \
