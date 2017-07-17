@@ -3,6 +3,7 @@ RUN apk -U upgrade && \
     apk add --no-cache bash \
         apache2 \
         curl \
+	icu-libs \
         pdftk \
         php5 \
         php5-apache2 \
