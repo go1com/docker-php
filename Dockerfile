@@ -51,6 +51,9 @@ RUN apk -U upgrade && \
         php5-zip \
         php5-zlib \
         ca-certificates && \
+	cd /usr/local/bin && \
+    	curl -sS https://getcomposer.org/installer | php -- --filename=composer && \
+    	chmod +x composer && \
     echo "http://dl-2.alpinelinux.org/alpine/edge/community/" >> /etc/apk/repositories && \
     apk add --no-cache shadow && \
     rm -rf /var/cache/apk/* && \
