@@ -8,7 +8,7 @@ else
 fi
 sed -i "s#^DocumentRoot \".*#DocumentRoot \"/$webroot\"#g" /etc/apache2/httpd.conf
 sed -i "s#/var/www/localhost/htdocs#/$webroot#" /etc/apache2/httpd.conf
-printf "\n<Directory \"/$webroot\">\n\tAllowOverride All\nSetEnv HTTPS on\n</Directory>\n" >> /etc/apache2/httpd.conf
+printf "\n<Directory \"/$webroot\">\n\tAllowOverride All\n</Directory>\n" >> /etc/apache2/httpd.conf
 
 # Allow run custom script
 if [ ! -z "$SCRIPT" ] && [ -f "$SCRIPT" ]; then
