@@ -28,6 +28,7 @@ RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositori
         php7-mcrypt \
         php7-memcached \
         php7-mbstring \
+        php7-msgpack \
         php7-opcache \
         php7-openssl \
         php7-pdo \
