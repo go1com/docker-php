@@ -1,74 +1,65 @@
-FROM php:7-fpm-alpine
-
-RUN set -xe \
-    && apk add --no-cache bash \
-        nginx \
-        freetype \
-        libpng \
-        libjpeg-turbo \
-        libmemcached-libs \
-        gettext-libs \
-        postgresql-libs \
-        libxslt \
-        libmcrypt \
-        bzip2 \
+FROM alpine:edge
+# Add edge cdn
+RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories && \
+    echo "http://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories && \
+    echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories && \
+    apk add --no-cache bash \
         icu-libs \
-        sqlite-libs \
-    \
-    && apk add --no-cache --virtual .build-deps \
-        $PHPIZE_DEPS \
-        bzip2-dev  \
-		coreutils \
-		curl-dev \
-        cyrus-sasl-dev \
-        freetype-dev \
-        g++ \
-        gettext-dev \
-        icu-dev \
-		libedit-dev \
-		libressl-dev \
-		libxml2-dev \
-        libpng-dev \
-        libjpeg-turbo-dev \
-        libmemcached-dev \
-        libmcrypt-dev \
-        libxslt-dev \
-        postgresql-dev \
-        sqlite-dev \
-	\
-	&& export CFLAGS="$PHP_CFLAGS" \
-		CPPFLAGS="$PHP_CPPFLAGS" \
-		LDFLAGS="$PHP_LDFLAGS" \
-    \
-    && docker-php-ext-install -j$(nproc) bcmath \
-        bz2 \
-        calendar \
-        exif \
-        gd \
-        gettext \
-        intl \
-        mysqli \
-        pgsql \
-        pdo_mysql \
-        pdo_pgsql \
-        pdo_sqlite \
-        soap \
-        sockets \
-        wddx \
-        xsl \
-        zip \
-        opcache \
-    \
-    && pecl install mcrypt-snapshot memcached msgpack \
-    && docker-php-ext-enable mcrypt memcached msgpack \
-    && apk del .build-deps \
-    && mkdir -p /etc/nginx \
-    && mkdir -p /run/nginx \
-    && rm -Rf /etc/nginx/nginx.conf \
-    && mkdir -p /etc/nginx/sites-available/ \
-    && mkdir -p /etc/nginx/sites-enabled/ \
-    && mkdir -p /app/public/ \
-    && ln -s /etc/nginx/sites-available/default.conf /etc/nginx/sites-enabled/default.conf
+        nginx \
+        curl \
+        php7 \
+        php7-fpm \
+        php7-bcmath \
+        php7-bz2 \
+        php7-calendar \
+        php7-ctype \
+        php7-curl \
+        php7-dom \
+        php7-exif \
+        php7-ftp \
+        php7-gettext \
+        php7-gd \
+        php7-iconv \
+        php7-intl \
+        php7-imap \
+        php7-json \
+        php7-mysqlnd \
+        php7-mysqli \
+        php7-mcrypt \
+        php7-memcached \
+        php7-mbstring \
+        php7-msgpack \
+        php7-opcache \
+        php7-openssl \
+        php7-pdo \
+        php7-pdo_mysql \
+        php7-pdo_pgsql \
+        php7-pdo_sqlite \
+        php7-phar \
+        php7-posix \
+        php7-pgsql \
+        php7-session \
+        php7-soap \
+        php7-sockets \
+        php7-sqlite3 \
+        php7-tokenizer \
+        php7-wddx \
+        php7-xml \
+        php7-xmlreader \
+        php7-xsl \
+        php7-zip \
+        php7-zlib \
+        php7-fileinfo \
+        php7-simplexml \
+        ca-certificates && \
+    rm -rf /var/cache/apk/* && \
+    mkdir -p /etc/nginx && \
+    mkdir -p /run/nginx && \
+    rm -Rf /etc/nginx/nginx.conf && \
+    mkdir -p /etc/nginx/sites-available/ && \
+    mkdir -p /etc/nginx/sites-enabled/ && \
+    mkdir -p /app/public/ && \
+    ln -s /etc/nginx/sites-available/default.conf /etc/nginx/sites-enabled/default.conf
 
 COPY rootfs /
 EXPOSE 80

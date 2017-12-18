@@ -16,7 +16,7 @@ if [ ! -z "$LOCATIONROOT" ]; then
 fi
 
 # Always chown webroot for better mounting
-chown -Rf www-data.www-data $webroot
+chown -Rf nginx.www-data $webroot
 
 # Convert env
 vars=`set | grep _DOCKER_`
@@ -40,9 +40,9 @@ if [ -f /app/resources/docker/hook-start ]; then
     source /app/resources/docker/hook-start
 fi
 
-php-fpm
+php-fpm7
 
 mkdir -p /tmp/nginx
-chown www-data /tmp/nginx
+chown nginx /tmp/nginx
 
 nginx
