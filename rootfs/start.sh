@@ -42,7 +42,4 @@ fi
 
 php-fpm
 
-mkdir -p /tmp/nginx
-chown www-data /tmp/nginx
-
 nginx

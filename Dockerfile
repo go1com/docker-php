@@ -1,4 +1,4 @@
-FROM php:7-fpm-alpine
+FROM php:7-fpm-alpine3.7
 
 RUN set -xe \
     && apk add --no-cache bash \
@@ -68,7 +68,10 @@ RUN set -xe \
     && mkdir -p /etc/nginx/sites-available/ \
     && mkdir -p /etc/nginx/sites-enabled/ \
     && mkdir -p /app/public/ \
-    && ln -s /etc/nginx/sites-available/default.conf /etc/nginx/sites-enabled/default.conf
+    && ln -s /etc/nginx/sites-available/default.conf /etc/nginx/sites-enabled/default.conf \
+    && rm -Rf /usr/local/etc/php-fpm.d/zz-docker.conf \
+    && mkdir -p /tmp/nginx \
+    && chown -R www-data /tmp/nginx
 
 COPY rootfs /
 EXPOSE 80
