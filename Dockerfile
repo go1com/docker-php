@@ -59,8 +59,8 @@ RUN set -xe \
         zip \
         opcache \
     \
-    && pecl install mcrypt-snapshot memcached msgpack \
-    && docker-php-ext-enable mcrypt memcached msgpack \
+    && pecl install mcrypt-snapshot memcached msgpack redis\
+    && docker-php-ext-enable mcrypt memcached msgpack redis \
     && apk del .build-deps \
     && mkdir -p /etc/nginx \
     && mkdir -p /run/nginx \
@@ -70,6 +70,7 @@ RUN set -xe \
     && mkdir -p /app/public/ \
     && ln -s /etc/nginx/sites-available/default.conf /etc/nginx/sites-enabled/default.conf \
     && rm -Rf /usr/local/etc/php-fpm.d/zz-docker.conf \
+    && rm -rf /tmp/* \
     && mkdir -p /tmp/nginx \
     && chown -R www-data /tmp/nginx
 
