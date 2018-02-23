@@ -56,6 +56,7 @@ RUN apk add --no-cache bash \
     mkdir /run/apache2 && \
     groupmod -g 32 xfs && groupmod -g 33 www-data && usermod -u 106 -g www-data -G apache apache && \
     sed -ri \
+        -e 's/Listen\ 80/#Listen\ 80/' \
         -e 's/#LoadModule\ rewrite_module/LoadModule\ rewrite_module/' \
         -e 's/#LoadModule\ remoteip_module/LoadModule\ remoteip_module/' \
         -e 's/#LoadModule\ expires_module/LoadModule\ expires_module/' \
