@@ -1,6 +1,7 @@
 FROM alpine:3.5
 RUN apk add --no-cache bash \
         apache2 \
+        ca-certificates \
         curl \
 	    icu-libs \
         pdftk \
@@ -48,8 +49,7 @@ RUN apk add --no-cache bash \
         php5-xmlreader \
         php5-xsl \
         php5-zip \
-        php5-zlib \
-        ca-certificates && \
+        php5-zlib && \
     echo "http://dl-cdn.alpinelinux.org/alpine/edge/community/" >> /etc/apk/repositories && \
     apk add --no-cache shadow && \
     rm -rf /var/cache/apk/* && \
