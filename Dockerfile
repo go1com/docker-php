@@ -90,7 +90,8 @@ RUN cd /tmp \
         -e 's/#LoadModule\ expires_module/LoadModule\ expires_module/' \
         -e 's/#LoadModule\ logio_module/LoadModule\ logio_module/' \
 		"/etc/apache2/httpd.conf" \
-    && apk del .build-deps
+    && apk del .build-deps \
+    && chown -R apache.www-data /tmp
 
 COPY rootfs /
 EXPOSE 80
