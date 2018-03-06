@@ -1,9 +1,25 @@
 FROM alpine:3.5
-RUN apk add --no-cache bash \
+# Build dependencies.
+ENV BUILD_DEPS \
+        autoconf \
+        file \
+        g++ \
+        gcc \
+        libc-dev \
+        make \
+        pkgconf \
+        re2c \
+        git \
+        php5-dev
+
+RUN cd /tmp \
+    && apk add --no-cache --virtual .build-deps $BUILD_DEPS \
+    && apk add --no-cache bash \
         apache2 \
         ca-certificates \
         curl \
 	    icu-libs \
+        git \
         pdftk \
         php5 \
         php5-apache2 \
@@ -49,19 +65,32 @@ RUN apk add --no-cache bash \
         php5-xmlreader \
         php5-xsl \
         php5-zip \
-        php5-zlib && \
-    echo "http://dl-cdn.alpinelinux.org/alpine/edge/community/" >> /etc/apk/repositories && \
-    apk add --no-cache shadow && \
-    rm -rf /var/cache/apk/* && \
-    mkdir /run/apache2 && \
-    groupmod -g 32 xfs && groupmod -g 33 www-data && usermod -u 106 -g www-data -G apache apache && \
-    sed -ri \
+        php5-zlib \
+    && apk add --no-cache --virtual .xhprof-deps \
+        graphviz \
+        fontconfig \
+        font-adobe-100dpi \
+    && git clone https://github.com/phacility/xhprof.git \
+    && ( \
+        cd xhprof/extension \
+        && phpize \
+        && ./configure \
+        && make \
+        && make install \
+    ) \
+    && echo "http://dl-cdn.alpinelinux.org/alpine/edge/community/" >> /etc/apk/repositories \
+    && apk add --no-cache shadow \
+    && rm -rf /var/cache/apk/* \
+    && mkdir /run/apache2 \
+    && groupmod -g 32 xfs && groupmod -g 33 www-data && usermod -u 106 -g www-data -G apache apache \
+    && sed -ri \
         -e 's/Listen\ 80/#Listen\ 80/' \
         -e 's/#LoadModule\ rewrite_module/LoadModule\ rewrite_module/' \
         -e 's/#LoadModule\ remoteip_module/LoadModule\ remoteip_module/' \
         -e 's/#LoadModule\ expires_module/LoadModule\ expires_module/' \
         -e 's/#LoadModule\ logio_module/LoadModule\ logio_module/' \
-		"/etc/apache2/httpd.conf"
+		"/etc/apache2/httpd.conf" \
+    && apk del .build-deps
 
 COPY rootfs /
 EXPOSE 80
