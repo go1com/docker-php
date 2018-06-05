@@ -10,18 +10,21 @@ ENV BUILD_DEPS \
         pkgconf \
         re2c \
         git \
-        php5-dev
+        php5-dev \
+        php5-pear
 
 RUN cd /tmp \
     && apk add --no-cache --virtual .build-deps $BUILD_DEPS \
     && apk add --no-cache bash \
         apache2 \
         ca-certificates \
+        wget \
         curl \
 	    icu-libs \
         git \
         pdftk \
         php5 \
+        php5-cli \
         php5-apache2 \
         php5-bcmath \
         php5-bz2 \
@@ -77,6 +80,17 @@ RUN cd /tmp \
         && ./configure \
         && make \
         && make install \
+    ) \
+    && cd /tmp \
+    && wget https://pecl.php.net/get/uploadprogress -O uploadprogress.zip \
+    && tar -zxf uploadprogress.zip \
+    && ( \
+        cd uploadprogress* \
+        && phpize \
+        && ./configure \
+        && make \
+        && make install \
+        && echo "extension=uploadprogress.so" >>  /etc/php5/conf.d/uploadprogress.ini \
     ) \
     && echo "http://dl-cdn.alpinelinux.org/alpine/edge/community/" >> /etc/apk/repositories \
     && apk add --no-cache shadow \
